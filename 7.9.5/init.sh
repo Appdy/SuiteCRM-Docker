@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $DB_HOST_NAME ]]; then
+	export DB_HOST_NAME=$DB_PORT_3306_TCP_ADDR
+fi
+
+if [[ -z $DB_TCP_PORT ]]; then
+	export DB_TCP_PORT=$DB_PORT_3306_TCP_PORT
+fi
+
+if [[ -z $DB_USER_NAME ]]; then
+	export DB_USER_NAME=$DB_ENV_MYSQL_USER
+fi
+
+if [[ -z $DB_PASSWORD ]]; then
+	export DB_PASSWORD=$DB_ENV_MYSQL_PASSWORD
+fi
+
+if [[ -z $DATABASE_NAME ]]; then
+	export DATABASE_NAME=$DB_ENV_MYSQL_DATABASE
+fi
+
+if [[ "$1" == 'apache2*' ]]; then
+  if ! [ -e index.php -a -e sugar_version.php  ]; then
+    cp -R $SRC_FOLDER $WWW_FOLDER
+    chown -R $WWW_USER:$WWW_GROUP $WWW_FOLDER/* && \
+    chown -R $WWW_USER:$WWW_GROUP $WWW_FOLDER
+
+    /usr/local/bin/envtemplate.py -i /usr/local/src/config_override.php.pyt -o /var/www/html/config_override.php
+    /usr/sbin/cron
+  fi
+fi
+
+  # Remove Apache PID lock file so apache can start next time
+if [ -e /run/apache2/apache2.pid  ]; then
+  rm -f /run/apache2/apache2.pid
+fi
+
+exec "$@"

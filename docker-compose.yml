@@ -1,24 +1,40 @@
-suitecrm:
-  build: 7.5.3
-  ports:
-    - "8080:80"
-  links:
-    - "db"
-  environment:
-    DB_TYPE: mysql
-    DB_MANAGER: MysqlManager
-dbdata:
-  image: tianon/true
-  volumes:
-    - /var/lib/mysql
-db:
-  image: mysql:5.6
-  volumes_from:
-    - dbdata
-  ports:
-    - 3306:3306
-  environment:
-    MYSQL_ROOT_PASSWORD: EvXTC3R7Sef5aB725hKv
-    MYSQL_DATABASE: suitecrm
-    MYSQL_USER: suitecrm
-    MYSQL_PASSWORD: B3fyAKRyFpaMR5vyPMJz
+version: "2"
+
+services:
+  suitecrm:
+    build: 7.9.5
+    container_name: suitecrm
+    depends_on:
+      # - crmdata
+      - db
+    # volumes:
+    #   - /Users/devil/Development/docker-suitecrm/src:/var/www/html
+    # volumes_from:
+    #   - crmdata
+    ports:
+      - "8080:80"
+    # links:
+    #   - db
+    environment:
+      - DB_TYPE=mysql
+      - DB_MANAGER=MysqlManager
+      - DB_TCP_PORT=3307
+
+  # crmdata:
+  #   image: tianon/true
+  #   volumes:
+  #     - /Users/devil/Development/docker-suitecrm/src:/var/www/html
+
+  db:
+    image: mariadb:5.5.57
+    container_name: suitecrm_db
+    volumes:
+      - /Users/devil/Development/docker-suitecrm/database:/var/lib/mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=suitecrm
+      - MYSQL_DATABASE=suitecrm
+      - MYSQL_USER=suitecrm
+      - MYSQL_PASSWORD=suitecrm
+
