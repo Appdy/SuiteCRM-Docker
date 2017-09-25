@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:7-apache
 
 ENV DOWNLOAD_URL http://downloads.sourceforge.net/project/suitecrm/SuiteCRM-7.9.5.zip?r=&ts=1458855387&use_mirror=iweb
 # ENV DOWNLOAD_FILE suitecrm-7.9.5.zip
