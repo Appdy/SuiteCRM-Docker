@@ -24,8 +24,6 @@ fi
 
 if [[ "$1" == 'apache2*' ]]; then
   if ! [ -e index.php -a -e sugar_version.php  ]; then
-    cp -R $SRC_FOLDER $WWW_FOLDER
-    chown -R $WWW_USER:$WWW_GROUP $WWW_FOLDER/* && \
     chown -R $WWW_USER:$WWW_GROUP $WWW_FOLDER
 
     /usr/local/bin/envtemplate.py -i /usr/local/src/config_override.php.pyt -o /var/www/html/config_override.php
